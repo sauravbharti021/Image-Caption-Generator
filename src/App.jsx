@@ -20,13 +20,12 @@ function App() {
   }
 
   const onUpload= async(event)=>{
-    console.log(event)
-    console.log(event.target.files[0])
+    
     setImg(event.target.files[0])
     setTempText('Wait your caption is being loaded')
 
     const res= await Api(event.target.files[0])
-    console.log(res.data.captionResult.text)
+
     if(res){
       setTempText(res.data.captionResult.text)
     }

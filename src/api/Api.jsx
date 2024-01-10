@@ -8,7 +8,6 @@ export const Api = async(img) => {
         let api_key = import.meta.env.VITE_AZURECV_APIKEY
         let end_point= `${import.meta.env.VITE_AZURECV_ENDPOINT}computervision/imageanalysis:analyze?api-version=2023-10-01&features=caption&gender-neutral-caption=true`
 
-        console.log(img, "image", end_point)
 
         let config=  {
 
