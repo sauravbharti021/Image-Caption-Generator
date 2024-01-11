@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import './App.css'
 import { useEffect } from 'react'
-import { Api } from './api/Api'
+import axios from 'axios'
 
 function App() {
 
@@ -20,14 +20,25 @@ function App() {
   }
 
   const onUpload= async(event)=>{
-    
+
     setImg(event.target.files[0])
     setTempText('Wait your caption is being loaded')
-
-    const res= await Api(event.target.files[0])
+    let apiImg= event.target.files[0]
+    let config = {
+        url: "api/azureApi",
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream'
+        },
+        data: apiImg,
+    };
+    let res= await axios(config).then(data=>{return data});
 
     if(res){
-      setTempText(res.data.captionResult.text)
+      console.log(res)
+      setTempText(res.data.final)
+    }else{
+      onReset()
     }
   }
 
