@@ -40,7 +40,6 @@ function App() {
     let res= await axios(config).then(data=>{return data});
 
     if(res){
-      console.log(res)
       setTempText(res.data.final)
     }else{
       onReset()
