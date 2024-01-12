@@ -8,7 +8,7 @@ function App() {
 
   const [img, setImg] = useState('')
   const [imagePreview, setImagePreview] = useState('')
-  const [tempText, setTempText] = useState('Wait your caption is being loaded')
+  const [tempText, setTempText] = useState('Wait your caption is being loaded ...')
 
   const onReset = ()=>{
     let btn = document.getElementById('resetBtn');
@@ -16,13 +16,18 @@ function App() {
     setImg('')
     setImagePreview('')
     document.getElementById('fileInput').value= ''
-    setTempText('Wait your caption is being loaded')
+    setTempText('Wait your caption is being loaded ...')
   }
 
   const onUpload= async(event)=>{
 
+    if(event.target.files[0].size>4718592){
+      setImg(event.target.files[0])
+      setTempText('Image should be less than 4.5 mb. Reset ...')
+      return
+    }
     setImg(event.target.files[0])
-    setTempText('Wait your caption is being loaded')
+    setTempText('Wait your caption is being loaded ...')
     let apiImg= event.target.files[0]
     let config = {
         url: "api/azureApi",
