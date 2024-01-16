@@ -3,12 +3,21 @@ import { useState } from 'react'
 import './App.css'
 import { useEffect } from 'react'
 import axios from 'axios'
+// const { v4: uuidv4 } = require('uuid');
 
 function App() {
 
   const [img, setImg] = useState('')
   const [imagePreview, setImagePreview] = useState('')
   const [tempText, setTempText] = useState('Wait your caption is being loaded ...')
+
+  const [hindiText, setHindiText] = useState("प्रतीक्षा करें कि आपका कैप्शन लोड किया जा रहा है ...")
+  const [currentLanguage, setCurrentLanguage] = useState('english')
+
+  const options= [
+    {value: 'english', label: 'English'},
+    {value: 'hindi', label : 'Hindi'}
+  ]
 
   const onReset = ()=>{
     let btn = document.getElementById('resetBtn');
@@ -17,6 +26,7 @@ function App() {
     setImagePreview('')
     document.getElementById('fileInput').value= ''
     setTempText('Wait your caption is being loaded ...')
+    setCurrentLanguage('english')
   }
 
   const onUpload= async(event)=>{
@@ -46,7 +56,32 @@ function App() {
     }
   }
 
+  const changeLanguage= (event)=>{
+    setCurrentLanguage(event.target.value)
+  }
+
+  const translate= async()=>{
+    let config= {
+      url: "api/azureTranslate",
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json',
+
+      },
+      data : tempText
+    }
+
+    let res = await axios(config).then(data => {return data} )
+  
+    if(res){
+      setHindiText(res.data)
+    }
+  }
+
   useEffect(()=>{
+    if(tempText){
+      translate()
+    }
     if(img)
       setImagePreview(URL.createObjectURL(img))
   }, [img, tempText])
@@ -64,7 +99,24 @@ function App() {
             img && <img src={imagePreview} className='w-96 h-80 my-3 border-2 border-blue-400 '/>
           }  
           {
-            img && <p id='result' className='my-3 py-4 border-4 border-black  text-center bg-blue-200'>{tempText}</p>
+            img && 
+            <div className=''>
+              Language &nbsp;
+              <select className='w-1/4 p-1 border rounded' onChange={changeLanguage}>
+                {
+                  options && options.map((option)=>{
+                    return (
+                    <option value={option.value} key={option.value}> {option.label} </option>
+                    )
+                  })
+
+                }
+              </select> 
+            </div>
+
+          }
+          {
+            img && <p id='result' className='my-3 py-4 border-4 border-black  text-center bg-blue-200'>{ currentLanguage=='english' ? tempText : hindiText}</p>
           }
           <div className='flex justify-center'>
 
